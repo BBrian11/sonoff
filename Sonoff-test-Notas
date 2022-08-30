@@ -1,0 +1,60 @@
+9/9/21
+APÍ DE ewelink (La que usa Reymond)
+https://ewelink-api.vercel.app/docs/introduction
+
+SONOFF DIY mode
+http://developers.sonoff.tech/sonoff-diy-mode-api-protocol.html
+API para correr en node.js
+
+https://github.com/skydiver/ewelink-api
+9/9/21
+En la carpeta app de iot2021 ejecuté:
+npm install ewelink-api
+
+Documentación sobre api ewelink
+https://github.com/CoolKit-Technologies/apiDocs/blob/master/en/APICenter.md
+Ejemplo test servidor api
+https://api.coolkit.cc:8080/api/user/region?country_code=86&appid=McFJj4Noke1mGDZCR1QarGW7P9Ycp0Vr&nonce=q3wz95p6&ts=1558004249&version=8
+
+
+
+
+
+
+
+
+
+
+appingeniot2022
+Integración api sonoff ewelink
+
+3/3/22
+ewelink web pago (permite 7 dias de prueba)
+web.ewelink.cc
+
+API DE COOLKIT, NATIVA DE EWELINK:
+
+https://github.com/CoolKit-Technologies/eWeLink-API
+
+
+
+
+ewelink web tool (Desrrollo particular)
+ewelink-web.vercel.app/home/switch
+
+Documentación ewelink api ()
+ewelink-api.vercel.app
+
+12/3/22
+En el archivo https://github.com/skydiver/ewelink-api/blob/master/src/data/constants.js
+
+Encontre las siguientes claves que deben ser las necesrias para acceder a la api de coolkit
+
+const APP_ID = 'YzfeftUVcZ6twZw1OoVKPRFYTrGEg01Q';
+const APP_SECRET = '4G91qSoboqYO4Y0XJ0LPPKIsq8reHdfa';
+
+/**********************************
+Cree el proyecto en PC siguiendo los pasos de proyecto NPM desde 0
+
+npm install ewelink-api
+****************************************/

@@ -1,0 +1,44 @@
+Proyecto NPM desde 0 - Notas
+
+Crear carpeta nuevo Proyecto
+
+Crear control de versiones
+git init
+
+Agregar repositorio remoto
+git remote add origin https://github.com/ingeniot/sonoff-test-2022
+
+Crear archivo .gitignore
+Incluir la carpeta node-modules en .gitignore
+
+Iniciar proyecto NPM
+npm init 
+
+Estructura de carpetas recomendada
+
+- frontend-project/       # Carpeta raíz del proyecto
+  - .git/                 # Carpeta oculta de datos de git
+  - node_modules/         # Carpeta de paquetes de Node/NPM
+  - dist/                 # Carpeta de código generado (cuando se usan preprocesadores)
+  - src/                  # Carpeta de código fuente (código editable)
+    - assets/             # Carpeta de estáticos (imágenes, audio, video, fuentes...)
+    - js/                 # Carpeta de Javascript
+      - index.js
+    - css/                # Carpeta de CSS
+      - index.css
+    - index.html
+  - package.json          # Archivo del proyecto NPM
+  - package-lock.json     # Histórico de versiones de dependencias
+  - .gitignore            # Ficheros y carpetas a ignorar por git
+
+  De esta estructura crear src y sus subcarpetas
+  
+  Para probar la ejecución de un archivo js en la carpeta del archivo por consola ejecutar:
+  node nombre_archivo.js
+
+  Tambien puedo ejecutar desde npm, agregando el comando start en el package.json:
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/js/index.js"
+  },
+  
