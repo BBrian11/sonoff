@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Heladera 1",
+    "temperature": true,
+    "id": "1001498e4a"
+  },
+  {
+    "name": "Heladera 2",
+    "temperature": true,
+    "id": "10014989de"
+  },
+  {
+    "name": "Heladera 3",
+    "temperature": true,
+    "id": "1001498a67"
+  },
+  {
+    "name": "Heladera 4",
+    "temperature": true,
+    "id": "10014993eb"
+  }
+]

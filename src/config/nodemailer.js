@@ -18,8 +18,8 @@ const sendEmail = async(pdfOutput)=>{
     try {
         //let pdfOutput = await createPDF();
         emailClient.sendMail({
-            from: `"Test"<gonzaloahuerta@gmail.com>`,
-            to: 'huertagonzalo@hotmail.com',
+            from: `"Test"<bolesibrian@gmail.com>`,
+            to: 'bolesibrian@gmail.com',
             subject: "Reporte",
             text: "Adjunto a este correo se encuentra el PDF del reporte requerido.",
             attachments: [{path: pdfOutput}]
