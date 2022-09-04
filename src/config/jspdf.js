@@ -6,11 +6,11 @@ const pdf = new jsPDF({
     format: 'a4'
 })
 
-const createPDF = async(dispositivo, temperatura, humedad, hora)=>{
-  pdf.text(`Dispositivo: ${dispositivo}`, 1.5, 3.5);
-  pdf.text(`Hora: ${hora}`, 1.5, 3.5);
-  pdf.text(`Temperatura: ${temperatura}%`, 1.5, 5.5);
-  pdf.text(`Humedad: ${humedad}°C`, 1.5, 7.5);
+const createPDF = async(device, temperature, humidity, dateFormatted)=>{
+  pdf.text(`Dispositivo: ${device}`, 1.5, 3.5);
+  pdf.text(`Hora: ${dateFormatted}`, 1.5, 3.5);
+  pdf.text(`Temperatura: ${temperature}%`, 1.5, 5.5);
+  pdf.text(`Humedad: ${humidity}°C`, 1.5, 7.5);
 
   const pdfOutput = pdf.output("datauristring");
   return pdfOutput;

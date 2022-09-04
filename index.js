@@ -53,18 +53,20 @@ cron.schedule("*/15 * * * *", async () => {
       const year = currentDate.getFullYear();
       const hour = currentDate.getHours();
       const minutes = currentDate.getHours();
-      const dateFormatted = `${year}-${month}-${day}-${hour}:${minutes}`;
+      const seconds = currentDate.getSeconds();
+      const dateFormatted = `${day}-${month}-${year}-${hour}:${minutes}:${seconds}`;
 
       firestore
         .collection(collectionKey)
-        .doc(`${device.name} ${dateFormatted}`)
-        .create({ ...device, temperature, humidity })
+        .add({ device, temperature, humidity, dateFormatted})
+          
         .then((res) => {
           console.log("Document " + device.name + " successfully written!");
         })
         .catch((error) => {
           console.error("Error writing document: ", error);
         });
+        
     });
   });
 });

@@ -9,27 +9,32 @@
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <h1 class="mt-4 mb-4">Dispositivos</h1>
+        <div class="row"><center>
+            <h1 class="mt-4 mb-4">Dispositivos - Droguerìa Betapharma</h1></center>
             <% for (item of devices) { %>
                 <div class="col">
+                    <div class="card">
                     <form action="/enviar-reporte" method="post">
-                        <label for="dispositivo">Dispositivo</label> <br>
-                        <input type="text" id="dispositivo" name="dispositivo" value="<%= item.name %>" readonly>
-                        <br> <br>
-                        <label for="humedad">Humedad Actual</label>
-                        <input type="text" name="humedad" id="humedad" value="<%= item.params.currentHumidity %>%" readonly>
-                        <br> <br>
-                        <label for="temperatura">Temperatura Actual</label>
-                        <input type="text" name="temperatura" id="temperatura" value="<%= item.params.currentTemperature %>°C" readonly>
-                        <br> <br> <br>
-                        <button id="pdf-btn" type="submit">Ver Històrico</button>
+                       <center>
+                        <h2  id="dispositivo" name="dispositivo" value="<%= item.name %>" ><%= item.name %></h2>
+               
+                        <br> 
+                        <h4 for="temperatura">Temperatura Actual</h4>
+                        <h1 name="temperatura" id="temperatura" value="<%= item.params.currentTemperature %>°C"><%= item.params.currentTemperature %>°C
+                        <br>
+                        <h4 for="humedad">Humedad Actual</h4>
+                        <h2 name="humedad" id="humedad" value="<%= item.params.currentHumidity %>%"><%= item.params.currentHumidity %>%</h2>
+                        <br> 
+                        <button type="button" onClick="window.location.reload();">Actualizar</button>
+                        <button id="pdf-btn" type="submit" >Ver Històrico</button></center>
                     </form>
-                    
+                </div>
                 </div>
             <% } %>
         </div>
     </div>
     <script type="module" src="../scripts/index.js"></script>
+    
+    <link href="css/style.css" rel="stylesheet" type="text/css">
 </body>
 </html>
