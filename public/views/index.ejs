@@ -11,10 +11,17 @@
 </head>
 <body>
    <div class="container">
+<<<<<<< HEAD
       <div class="row"><center><br><br>
          <h1 class="h1 display-1"> Droguería Betapharma</h1></center><br><br>
          <% for (item of devices) { %>
            <div class="col">
+=======
+      <div class="row"><center>
+         <h1 class="mt-4 mb-4">Dispositivos - Droguería Betapharma</h1></center>
+         <% for (item of devices) { %>
+         <div class="col">
+>>>>>>> 9b67ac691e4c72826f2cd54253caff688e918bad
             <div class="card">
                <form action="/enviar-reporte" method="post">
                   <center>
@@ -23,6 +30,7 @@
                   <h4>Temperatura Actual</h4>
                   <h1 id="temperatura"><%= item.params.currentTemperature %>°C
                   <br>
+<<<<<<< HEAD
                   <h4 for="humedad">Humedad Relativa</h4>
                   <h2 id="humedad"><%= item.params.currentHumidity %>%</h2>
                   <br> 
@@ -31,10 +39,21 @@
                   <input type="hidden" name="temperatura" value="<%= item.params.currentTemperature %>°C">
                   <input type="hidden" name="humedad" value="<%= item.params.currentHumidity %>%">
                   <button  type="button" class="button-20"  role="button" id="pdf-btn" type="submit">Historial</button></center>
+=======
+                  <h4 for="humedad">Humedad Actual</h4>
+                  <h2 id="humedad"><%= item.params.currentHumidity %>%</h2>
+                  <br> 
+                  <button type="button" onClick="window.location.reload();">Actualizar</button>
+                  <input type="hidden" name="dispositivo" value="<%= item.name %>">
+                  <input type="hidden" name="temperatura" value="<%= item.params.currentTemperature %>°C">
+                  <input type="hidden" name="humedad" value="<%= item.params.currentHumidity %>%">
+                  <button id="pdf-btn" type="submit">Ver Histórico</button></center>
+>>>>>>> 9b67ac691e4c72826f2cd54253caff688e918bad
                </form>
             </div>
          </div>
          <% } %>
+<<<<<<< HEAD
       </div><br><br>
       <!-- HTML !-->
 
@@ -54,6 +73,18 @@
             <h2 class="mb-4 text-center">Humedad relativa</h2>
             <canvas id="graficoHum" width="400" height="200"></canvas>
          </div></div>
+=======
+      </div>
+      <div class="row mt-4">
+         <div class="col">
+            <h2 class="mb-4 text-center">Temperatura actual</h2>
+            <canvas id="graficoTemp" width="400" height="400"></canvas>
+         </div>
+         <div class="col">
+            <h2 class="mb-4 text-center">Humedad actual</h2>
+            <canvas id="graficoHum" width="400" height="400"></canvas>
+         </div>
+>>>>>>> 9b67ac691e4c72826f2cd54253caff688e918bad
          <script>
             let arrayTemperaturas = '<%= tempArray %>'.split(',');
             let arrayDispositivos = '<%= deviceArray %>'.split(',');
@@ -63,6 +94,7 @@
             const humedadContainer = document.getElementById('graficoHum');
 
             const graficoTemperatura = new Chart(temperaturaContainer, {
+<<<<<<< HEAD
                type: 'line',
                data: {
                   labels: arrayDispositivos,
@@ -72,6 +104,14 @@
                      
                      data: arrayTemperaturas,
                     
+=======
+               type: 'doughnut',
+               data: {
+                  labels: arrayDispositivos,
+                  datasets: [{
+                     label: 'My First Dataset',
+                     data: arrayTemperaturas,
+>>>>>>> 9b67ac691e4c72826f2cd54253caff688e918bad
                      backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -95,11 +135,19 @@
             });
 
             const graficoHumedad = new Chart(humedadContainer, {
+<<<<<<< HEAD
                type: 'line',
                data: {
                   labels: arrayDispositivos,
                   datasets: [{
                      label: 'Humedad Relativa',
+=======
+               type: 'doughnut',
+               data: {
+                  labels: arrayDispositivos,
+                  datasets: [{
+                     label: 'My First Dataset',
+>>>>>>> 9b67ac691e4c72826f2cd54253caff688e918bad
                      data: arrayHumedad,
                      backgroundColor: [
                         'rgb(255, 99, 132)',
@@ -125,7 +173,11 @@
             });
          </script>
       </div>
+<<<<<<< HEAD
    </div><br><br><br>
+=======
+   </div>
+>>>>>>> 9b67ac691e4c72826f2cd54253caff688e918bad
    <script type="module" src="../scripts/index.js"></script>
    <link href="css/style.css" rel="stylesheet" type="text/css">
 </body>
