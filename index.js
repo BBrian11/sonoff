@@ -18,14 +18,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", async (req, res) => {
+  let tempArray = [];
+  let deviceArray = [];
+  let humidityArray = [];
   let devices = await getDevices();
+  
+  devices.forEach((device)=>{
+    tempArray.push(device.params.currentTemperature);
+    deviceArray.push(device.name);
+    humidityArray.push(device.params.currentHumidity);
+  });
 
-  return res.render("index", { devices: devices });
+  return res.render("index", { devices: devices, tempArray: tempArray, deviceArray: deviceArray, humidityArray: humidityArray });
 });
 
 app.post("/enviar-reporte", async (req, res) => {
   return res.render("view", { device: { ...req.body } });
 });
+
 
 cron.schedule("*/15 * * * *", async () => {
   await connection.getRegion();
@@ -65,8 +75,7 @@ cron.schedule("*/15 * * * *", async () => {
         })
         .catch((error) => {
           console.error("Error writing document: ", error);
-        });
-        
+        }); 
     });
   });
 });

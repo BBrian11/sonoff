@@ -5,36 +5,116 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
     <title>Home</title>
 </head>
 <body>
-    <div class="container">
-        <div class="row"><center>
-            <h1 class="mt-4 mb-4">Dispositivos - Droguerìa Betapharma</h1></center>
-            <% for (item of devices) { %>
-                <div class="col">
-                    <div class="card">
-                    <form action="/enviar-reporte" method="post">
-                       <center>
-                        <h2  id="dispositivo" name="dispositivo" value="<%= item.name %>" ><%= item.name %></h2>
-               
-                        <br> 
-                        <h4 for="temperatura">Temperatura Actual</h4>
-                        <h1 name="temperatura" id="temperatura" value="<%= item.params.currentTemperature %>°C"><%= item.params.currentTemperature %>°C
-                        <br>
-                        <h4 for="humedad">Humedad Actual</h4>
-                        <h2 name="humedad" id="humedad" value="<%= item.params.currentHumidity %>%"><%= item.params.currentHumidity %>%</h2>
-                        <br> 
-                        <button type="button" onClick="window.location.reload();">Actualizar</button>
-                        <button id="pdf-btn" type="submit" >Ver Històrico</button></center>
-                    </form>
-                </div>
-                </div>
-            <% } %>
-        </div>
-    </div>
-    <script type="module" src="../scripts/index.js"></script>
-    
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+   <div class="container">
+      <div class="row"><center>
+         <h1 class="mt-4 mb-4">Dispositivos - Droguería Betapharma</h1></center>
+         <% for (item of devices) { %>
+         <div class="col">
+            <div class="card">
+               <form action="/enviar-reporte" method="post">
+                  <center>
+                  <h2  id="dispositivo"><%= item.name %></h2>
+                  <br> 
+                  <h4>Temperatura Actual</h4>
+                  <h1 id="temperatura"><%= item.params.currentTemperature %>°C
+                  <br>
+                  <h4 for="humedad">Humedad Actual</h4>
+                  <h2 id="humedad"><%= item.params.currentHumidity %>%</h2>
+                  <br> 
+                  <button type="button" onClick="window.location.reload();">Actualizar</button>
+                  <input type="hidden" name="dispositivo" value="<%= item.name %>">
+                  <input type="hidden" name="temperatura" value="<%= item.params.currentTemperature %>°C">
+                  <input type="hidden" name="humedad" value="<%= item.params.currentHumidity %>%">
+                  <button id="pdf-btn" type="submit">Ver Histórico</button></center>
+               </form>
+            </div>
+         </div>
+         <% } %>
+      </div>
+      <div class="row mt-4">
+         <div class="col">
+            <h2 class="mb-4 text-center">Temperatura actual</h2>
+            <canvas id="graficoTemp" width="400" height="400"></canvas>
+         </div>
+         <div class="col">
+            <h2 class="mb-4 text-center">Humedad actual</h2>
+            <canvas id="graficoHum" width="400" height="400"></canvas>
+         </div>
+         <script>
+            let arrayTemperaturas = '<%= tempArray %>'.split(',');
+            let arrayDispositivos = '<%= deviceArray %>'.split(',');
+            let arrayHumedad = '<%= humidityArray %>'.split(',');
+
+            const temperaturaContainer = document.getElementById('graficoTemp');
+            const humedadContainer = document.getElementById('graficoHum');
+
+            const graficoTemperatura = new Chart(temperaturaContainer, {
+               type: 'doughnut',
+               data: {
+                  labels: arrayDispositivos,
+                  datasets: [{
+                     label: 'My First Dataset',
+                     data: arrayTemperaturas,
+                     backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(62, 205, 86)'
+                     ],
+                     hoverOffset: 4
+                  }],
+               },
+               options: {
+                  plugins: {
+                     labels: {
+                        render: function (args) {
+                           return args.value + ' °C';
+                        },
+                        fontColor: '#ffffff',
+                        fontSize: 18,
+                     }
+                  }
+               }
+            });
+
+            const graficoHumedad = new Chart(humedadContainer, {
+               type: 'doughnut',
+               data: {
+                  labels: arrayDispositivos,
+                  datasets: [{
+                     label: 'My First Dataset',
+                     data: arrayHumedad,
+                     backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(62, 205, 86)'
+                     ],
+                     hoverOffset: 4
+                  }]
+               },
+               options: {
+                  plugins: {
+                     labels: {
+                        render: function (args) {
+                           return args.value + ' %';
+                        },
+                        fontColor: '#ffffff',
+                        fontSize: 18,
+                        precision: 0
+                     }
+                  }
+               }
+            });
+         </script>
+      </div>
+   </div>
+   <script type="module" src="../scripts/index.js"></script>
+   <link href="css/style.css" rel="stylesheet" type="text/css">
 </body>
 </html>
