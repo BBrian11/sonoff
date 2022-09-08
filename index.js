@@ -1,14 +1,17 @@
+
 const express = require("express");
 const { connection, getDevices } = require("./src/config/ewelink-config.js");
 const { createPDF } = require("./src/config/jspdf.js");
 const { sendEmail } = require("./src/config/nodemailer.js");
 const cron = require("node-cron");
-const admin = require("firebase-admin");
-const serviceAccount = require("./src/config/key.json");
-const data = require("./src/config/devices.json");
+
 const collectionKey = "devices"; //Nombre de la colecciòn
 const app = express();
 const fs = require("fs");
+
+
+
+
 
 app.set("views", "./public/views");
 app.set("view engine", "ejs");
@@ -35,44 +38,50 @@ app.get("/", async (req, res) => {
 app.post("/enviar-reporte", async (req, res) => {
   return res.render("view", { device: { ...req.body } });
 });
+const firebase = require('firebase');
+      const firebaseConfig = {
+        apiKey: "AIzaSyA0SPrVpzWj4_djaMvQLswxboN4WFrh_wg",
+  authDomain: "informesbetapharma.firebaseapp.com",
+  databaseURL: "https://informesbetapharma-default-rtdb.firebaseio.com",
+  projectId: "informesbetapharma",
+  storageBucket: "informesbetapharma.appspot.com",
+  messagingSenderId: "622037563604",
+  appId: "1:622037563604:web:11b948b38f55b1a900e341",
+  measurementId: "G-NMGLX5Y50Y"
+      };
+      firebase.initializeApp(firebaseConfig);
 
-
-cron.schedule("*/15 * * * *", async () => {
+      cron.schedule("*/15 * * * *", async () => {
   await connection.getRegion();
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://reportesbetapharma-default-rtdb.firebaseio.com",
-  });
-
-  const firestore = admin.firestore();
-  const settings = { timestampsInSnapshots: true };
-  firestore.settings(settings);
-
+  
   JSON.parse(process.env.DEVICES).forEach(async (device) => {
     const { temperature, ...err } =
       await connection.getDeviceCurrentTemperature(device.id);
     console.log(temperature, err);
 
     const { humidity } = await connection.getDeviceCurrentHumidity(device.id);
-
-    data.forEach((device) => {
-      const currentDate = new Date();
-     
-
-      firestore
-        .collection(collectionKey)
-        .add({ device, temperature, humidity, currentDate})
+         
+                    
+    const currentDate = new Date();
+        require('firebase/firestore'); // eslint-disable-line global-require
+    
+         
+    const db = firebase.firestore();
+     db.collection(collectionKey).add({ device, temperature, humidity, currentDate});
+            
+        
+            console.log("Document " + device.name + " successfully written!");
           
-        .then((res) => {
-          console.log("Document " + device.name + " successfully written!");
-        })
-        .catch((error) => {
-          console.error("Error writing document: ", error);
-        }); 
-    });
-  });
-});
+          
+      });
+      
+
+     });
+       
+    
+ 
+
 
 const PORT = 3000;
 
