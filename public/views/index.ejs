@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <title>Home</title>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
+   <script src="http://code.jquery.com/jquery-latest.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+   <script src="js/jquery.gridster.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.debug.js"></script>
+
+   <link rel="stylesheet" type="text/css" href="css/jquery.gridster.css">
+   <title>Home</title>
 </head>
+
 <body>
    <div id="screen" class="container">
-      <div class="row"><center><br><br>
-         <h1 class="h1 display-1"> Droguería Betapharma</h1></center><br><br>
+      <div class="row"><center>
+         <img src="img/logo.svg" alt="yoast seo" height="288" width="388"/></center>
          <% for (item of devices) { %>
            <div class="col">
             <div   class="card">
-               <form action="/enviar-reporte" method="post">
+               <form action="/enviar-reporte" >
                   <center>
                   <h2  id="dispositivo"><%= item.name %></h2>
                   <br> 
@@ -27,112 +35,185 @@
                   <h4 for="humedad">Humedad Relativa</h4>
                   <h2 id="humedad"><%= item.params.currentHumidity %>%</h2>
                   <br> 
-                  <button type="button"  class="button-1" role="button" onClick="window.location.reload();">Actualizar</button>
+                 
                   <input type="hidden" name="dispositivo" value="<%= item.name %>">
                   <input type="hidden" name="temperatura" value="<%= item.params.currentTemperature %>°C">
                   <input type="hidden" name="humedad" value="<%= item.params.currentHumidity %>%">
-                  <button  type="button" class="button-20"  role="button" id="pdf-btn" type="submit">Historial</button></center>
+                  <button  type="button" class="button-20"  role="button" id="pdf-btn"  type="submit" onClick="location.href='/view';"> Historial - <%= item.name %></button></center>
                </form>
             </div>
          </div>
          <% } %>
-      </div><br><br>
+      </div>
+      <br><br>
+      <center>
+         <button type="button"  class="button-20" role="button" onClick="location.href='/excel';">DESCARGAR REPORTE EN EXCEL</button>
+      </center>
+      <br><br>
+      <!-- HTML !-->
       <!-- HTML !-->
 
-<!-- HTML !-->
+      <!-- HTML !-->
 
-<!-- <script> 
-   $(document).ready(function(){
-      setInterval(function(){
-            $("#screen").load(window.location.href);
-      }, 20000);
-   });
-</script> -->
+      <!-- <script> 
+         $(document).ready(function(){
+            setInterval(function(){
+                  $("#screen").load(window.location.href);
+            }, 20000);
+         });
+      </script> -->
 
-      <div class="chart">
-      <div class="row mt-4">
-         <div class="col">
-            <h2 class="mb-4 text-center">Temperatura relativa</h2>
-            <canvas id="graficoTemp" width="400" height="200"></canvas>
+      <body>
+         <div class="gridster">
+            <ul>
+               <li data-row="1" data-col="1" data-sizex="5" data-sizey="6"><img src="img/logo.svg" alt="beta" />
+                  <canvas id="graficoTemp"></canvas>
+               </li>
+               <li data-row="1" data-col="5" data-sizex="5" data-sizey="6">
+                  <canvas id="line-chart"></canvas><img src="img/logo.svg" alt="beta" />
+               </li>
+               <li data-row="7" data-col="1" data-sizex="5" data-sizey="5">
+                  <canvas id="chart3"></canvas>
+               </li>
+               <li data-row="7" data-col="6" data-sizex="5" data-sizey="5">
+                  <canvas id="chart4"></canvas>   
+               </li>
+            </ul>
          </div>
-         <div class="col">
-            <h2 class="mb-4 text-center">Humedad relativa</h2>
-            <canvas id="graficoHum" width="400" height="200"></canvas>
-         </div></div>
-         <script>
-            let arrayTemperaturas = '<%= tempArray %>'.split(',');
-            let arrayDispositivos = '<%= deviceArray %>'.split(',');
-            let arrayHumedad = '<%= humidityArray %>'.split(',');
+         <br><br>
+         <center>
+            <button type="button"  class="button-20" role="button"  id="export">DESCARGAR REPORTE EN PDF</button>
+         </center>
+         <br><br>
+      </body>
 
-            const temperaturaContainer = document.getElementById('graficoTemp');
-            const humedadContainer = document.getElementById('graficoHum');
+      <script>
+         let arrayTemperaturas = '<%= tempArray %>'.split(',');
+         let arrayDispositivos = '<%= deviceArray %>'.split(',');
+         let arrayHumedad = '<%= humidityArray %>'.split(',');
 
-            const graficoTemperatura = new Chart(temperaturaContainer, {
-               type: 'line',
-               data: {
-                  labels: arrayDispositivos,
-                 
-                  datasets: [{
-                     label: 'Temperatura Relativa',
-                     
-                     data: arrayTemperaturas,
-                    
-                     backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)',
-                        'rgb(62, 205, 86)'
-                     ],
-                     hoverOffset: 4
-                  }],
-               },
-               options: {
-                  plugins: {
-                     labels: {
-                        render: function (args) {
-                           return args.value + ' °C';
-                        },
-                        fontColor: '#ffffff',
-                        fontSize: 18,
-                     }
+         const temperaturaContainer = document.getElementById('graficoTemp');
+         const humedadContainer = document.getElementById('graficoHum');
+
+         const graficoTemperatura = new Chart(temperaturaContainer, {
+            type: 'bar',
+            data: {
+               labels: arrayDispositivos,
+               datasets: [{
+                  label: 'Temperatura Relativa',
+                  
+                  data: arrayTemperaturas,
+                  
+                  backgroundColor: [
+                     'rgb(255, 99, 132)',
+                     'rgb(54, 162, 235)',
+                     'rgb(255, 205, 86)',
+                     'rgb(62, 205, 86)'
+                  ],
+                  hoverOffset: 4
+               }],
+            },
+            options: {
+               plugins: {
+                  labels: {
+                     render: function (args) {
+                        return args.value + ' °C';
+                     },
+                     fontColor: '#ffffff',
+                     fontSize: 18,
                   }
                }
+            }
+         });
+
+         $(function(){ //DOM Ready
+            //instantiate gridster 
+            $(".gridster > ul ").gridster({
+               widget_margins: [8, 8],
+               widget_base_dimensions: [100, 55]
             });
 
-            const graficoHumedad = new Chart(humedadContainer, {
+            //fill first widget
+
+            firstChart();
+            //fill second widget
+            thirdChart();
+
+            //fill fourth widget
+            fourthChart();
+
+            $("#export").on("click", function() {
+               exportDashboard();
+            });
+         });
+
+         function exportDashboard() {
+            //instantiate jsPDF 
+            var doc = new jsPDF('p','mm','a4');
+            doc.addHTML($("ul"), 15, 15, {
+               'background': '#fff',
+            }, function() {
+               doc.save('DOC.pdf');
+            });
+         }
+
+         function firstChart() {
+            var canvas = document.getElementById('line-chart').getContext('2d');
+            new Chart(canvas, {
                type: 'line',
+               data: {
+                  labels:arrayDispositivos,
+                  datasets: [{
+                     label: 'TEMPERATURA RELATIVA',
+                     data:arrayTemperaturas,
+                     backgroundColor: "rgba(182, 213, 139, 0.5)"
+                  }, ]
+               }
+            });
+         }
+
+         function thirdChart() {
+            var canvas = document.getElementById("chart3").getContext('2d');
+            new Chart(canvas, {
+               type: 'bar',
                data: {
                   labels: arrayDispositivos,
                   datasets: [{
-                     label: 'Humedad Relativa',
-                     data: arrayHumedad,
                      backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)',
-                        'rgb(62, 205, 86)'
-                     ],
-                     hoverOffset: 4
+                     "#512da8", 
+                        "#90a4ae", 
+                        "#009688", 
+                        "#e74c3c"
+                        ],
+                        data: arrayTemperaturas,
                   }]
-               },
-               options: {
-                  plugins: {
-                     labels: {
-                        render: function (args) {
-                           return args.value + ' %';
-                        },
-                        fontColor: '#ffffff',
-                        fontSize: 18,
-                        precision: 0
-                     }
-                  }
                }
             });
-         </script>
-      </div>
-   </div><br><br><br>
-   <script type="module" src="../scripts/index.js"></script>
+         }
+
+         function fourthChart() {
+            var canvas = document.getElementById("chart4").getContext('2d');
+            new Chart(canvas, {
+               type: 'doughnut',
+               data: {
+                  labels: arrayDispositivos,
+                  datasets: [{
+                     backgroundColor: [
+                        
+                        "#512da8", 
+                        "#90a4ae", 
+                        "#009688", 
+                        "#e74c3c"
+                        ],
+                        data:arrayTemperaturas,
+                  }]
+               }
+            });
+         }
+
+      </script>
+   </div>
+   <br><br><br>
    <link href="css/style.css" rel="stylesheet" type="text/css">
-  
 </body>
 </html>

@@ -139,3 +139,51 @@ body {
   opacity: .65;
   pointer-events: none;
 }
+div.gridster {
+	background: #81d4fa none repeat scroll 0 0;
+	width:auto;
+	height:auto;
+}
+
+.gridster ul {
+	background-color: transparent;
+}
+
+.gridster li {
+	font-size: 1em;
+	font-weight: bold;
+	text-align: center;
+	line-height: 100%;
+	background: white none repeat scroll 0 0;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+}
+
+li {
+	list-style: none;
+	font-weight: bold;
+}
+
+button {
+	background-color: white;
+	border: none;
+	color: black;
+	padding: 15px 30px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	border-radius: 12px;
+
+	margin: 20px;
+	cursor: pointer;
+}
+
+.gridster ul{
+  margin: 0 auto;
+}
