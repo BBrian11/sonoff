@@ -24,7 +24,7 @@
          <img src="img/logo.svg" alt="yoast seo" height="288" width="388"/></center>
          <% for (item of devices) { %>
            <div class="col">
-            <div   class="card">
+            <div class="card">
                <form action="/enviar-reporte" >
                   <center>
                   <h2  id="dispositivo"><%= item.name %></h2>
@@ -47,9 +47,24 @@
       </div>
       <br><br>
       <center>
-         <button type="button"  class="button-20" role="button" onClick="location.href='/excel';">DESCARGAR REPORTE EN EXCEL</button>
+         <button type="button" class="button-20" role="button" onClick="location.href='/excel';">DESCARGAR REPORTE EN EXCEL</button>
       </center>
       <br><br>
+
+      <table>
+         <tr>
+            <th>Fecha y hora</th>
+            <th>Dispoistivo</th>
+            <th>Temperatura registrada</th>
+         </tr>
+         <% for(let i=0; i<deviceArray.length; i++) { %>
+            <tr>
+               <td>Fecha y hora</tr>
+               <td><%= deviceArray[i] %></td>
+               <td><%= tempArray[i] %></td>
+            </tr>
+         <% } %>
+      </table>
       <!-- HTML !-->
       <!-- HTML !-->
 
@@ -134,8 +149,8 @@
             });
 
             //fill first widget
-
             firstChart();
+
             //fill second widget
             thirdChart();
 
@@ -180,7 +195,7 @@
                   labels: arrayDispositivos,
                   datasets: [{
                      backgroundColor: [
-                     "#512da8", 
+                        "#512da8", 
                         "#90a4ae", 
                         "#009688", 
                         "#e74c3c"
@@ -199,7 +214,6 @@
                   labels: arrayDispositivos,
                   datasets: [{
                      backgroundColor: [
-                        
                         "#512da8", 
                         "#90a4ae", 
                         "#009688", 

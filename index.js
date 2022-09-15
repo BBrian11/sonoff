@@ -3,28 +3,20 @@ const { connection, getDevices } = require("./src/config/ewelink-config.js");
 const { createPDF } = require("./src/config/jspdf.js");
 const { sendEmail } = require("./src/config/nodemailer.js");
 const cron = require("node-cron");
+const firebase = require("firebase");
+const {firebaseConfig} = require('./src/config/firebase.js');
 
 const collectionKey = "devices"; //Nombre de la colecciòn
+
+firebase.initializeApp(firebaseConfig);
+
 const app = express();
 const fs = require("fs");
-const firebase = require("firebase");
-//let moment = require('moment');
-
-const firebaseConfig = {
-  apiKey: "AIzaSyA0SPrVpzWj4_djaMvQLswxboN4WFrh_wg",
-  authDomain: "informesbetapharma.firebaseapp.com",
-  databaseURL: "https://informesbetapharma-default-rtdb.firebaseio.com",
-  projectId: "informesbetapharma",
-  storageBucket: "informesbetapharma.appspot.com",
-  messagingSenderId: "622037563604",
-  appId: "1:622037563604:web:11b948b38f55b1a900e341",
-  measurementId: "G-NMGLX5Y50Y",
-};
+const {getDevicesDb, getDevicesDbSorted} = require('./src/functions/getDevicesDb.js');
+const {setDevicesDb} = require('./src/functions/setDevicesDb.js');
 
 const xl = require("excel4node");
 const path = require("path");
-
-firebase.initializeApp(firebaseConfig);
 
 app.set("views", "./public/views");
 app.set("view engine", "ejs");
@@ -58,37 +50,43 @@ app.post("/enviar-reporte", async (req, res) => {
 });
 
 app.get("/excel", async (req, res) => {
-  let before1day = new Date().getTime() - 24 * 3600 * 1000;
-  let arrayData = [];
   let arrayTemperaturas = [];
-  let tempMax = 0;
+  let documentos = await getDevicesDb();
+  let arrayData = [];
   let tempMin = 0;
-  let documentos = await firebase
-    .firestore()
-    .collection(collectionKey)
-    .orderBy("currentDate")
-    .startAt(new Date(before1day))
-    .get();
+  let tempMax = 0;
 
   documentos.docs.map((doc) => {
     arrayData.push(doc.data());
   });
 
   arrayData.map((doc) => {
-    arrayTemperaturas.push(doc.temperature);
+      arrayTemperaturas.push(doc.temperature);
   });
 
-  arrayTemperaturas.map((temp, index) => {
-    if (index === 0) {
+  let arrayTempFiltrado = arrayTemperaturas.filter(temp=>temp != 'unavailable');
+
+  let arrayTempNumber = arrayTempFiltrado.map(Number);
+
+  console.log(arrayTempNumber); 
+
+  /* tempMin = Math.min(Number(arrayTempFiltrado));
+  tempMax = Math.max(Number(arrayTempFiltrado)); */
+
+  arrayTempNumber.map((temp, index) => {
+    if (index === 0 && temp != 'unavailable') {
       tempMin = temp;
     }
-    if (temp > tempMax) {
+    if (temp > tempMax && temp != 'unavailable') {
       tempMax = temp;
     }
-    if (temp < tempMin) {
+    if (temp < tempMin && temp != 'unavailable') {
       tempMin = temp;
     }
   });
+
+  console.log("Temp min: ", tempMin);
+  console.log("Temp max: ", tempMax);
 
   // excel generator
   let libro = new xl.Workbook();
@@ -117,16 +115,7 @@ app.get("/excel", async (req, res) => {
   hoja.column(5).setWidth(25);
   hoja.column(7).setWidth(24);
 
-  const devicesIds = arrayData
-    .map(({ device }) => device.name.match(/\d+/g))
-    .flat();
-  const devicesSorted = devicesIds.sort((a, b) => a - b);
-
-  const devices = [];
-
-  devicesSorted.forEach((id) => {
-    devices.push(...arrayData.filter(({ device }) => device.name.includes(id)));
-  });
+  const devices = await getDevicesDbSorted();
 
   devices.map((doc, index) => {
     if (index === 0) {
@@ -180,29 +169,12 @@ app.get("/excel", async (req, res) => {
   });
 });
 
+app.get("pdf", async(req, res)=>{
+
+})
 
 cron.schedule("*/15 * * * *", async () => {
-  await connection.getRegion();
-
-  JSON.parse(process.env.DEVICES).forEach(async (device) => {
-    const { temperature, ...err } =
-      await connection.getDeviceCurrentTemperature(device.id);
-    console.log(temperature, err);
-
-    const { humidity } = await connection.getDeviceCurrentHumidity(device.id);
-
-    const currentDate = new Date();
-    require("firebase/firestore"); // eslint-disable-line global-require
-
-    const db = firebase.firestore();
-    db.collection(collectionKey).add({
-      device,
-      temperature,
-      humidity,
-      currentDate,
-    });
-    console.log("Document " + device.name + " successfully written!");
-  });
+  await setDevicesDb();
 });
 
 const PORT = 3000;
