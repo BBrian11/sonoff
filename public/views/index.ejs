@@ -46,25 +46,39 @@
          <% } %>
       </div>
       <br><br>
+      <div class="mt-2 mb-4" id="historicos">
+         <div class="text-center mb-4">
+            <img src="img/logo.svg" height="150" width="390"/>
+         </div>
+         <h3>Datos históricos. Últimas 24hs.</h3>
+         <table class="table">
+            <thead>
+               <tr>
+                  <th>Fecha y hora</th>
+                  <th>Dispositivo</th>
+                  <th>Temperatura Registrada</th>
+               </tr>
+            </thead>
+            
+            <% for (item of historicDevices) { %>
+               <tr>
+                  <td><%= item.currentDate.toDate().toLocaleString() %></td>
+                  <td><%= item.device.name %></td>
+                  <td><%= item.temperature %> °C</td>
+               </tr> 
+            <% } %>
+         </table>
+         <h2>Grafico heladera 1</h2> 
+         <canvas class="col" id="grafico1container"></canvas>
+         <!-- <div class="col" id="grafico2container"></div>
+         <div class="col" id="grafico3container"></div>
+         <div class="col" id="grafico4container"></div> -->
+      </div>
       <center>
          <button type="button" class="button-20" role="button" onClick="location.href='/excel';">DESCARGAR REPORTE EN EXCEL</button>
       </center>
       <br><br>
 
-      <table>
-         <tr>
-            <th>Fecha y hora</th>
-            <th>Dispoistivo</th>
-            <th>Temperatura registrada</th>
-         </tr>
-         <% for(let i=0; i<deviceArray.length; i++) { %>
-            <tr>
-               <td>Fecha y hora</tr>
-               <td><%= deviceArray[i] %></td>
-               <td><%= tempArray[i] %></td>
-            </tr>
-         <% } %>
-      </table>
       <!-- HTML !-->
       <!-- HTML !-->
 
@@ -107,8 +121,50 @@
          let arrayDispositivos = '<%= deviceArray %>'.split(',');
          let arrayHumedad = '<%= humidityArray %>'.split(',');
 
+         let temperaturasHeladera1 = '<%= temperaturas1 %>'.split(',');
+         let fechasHeladera1 = '<%= fechas1 %>'.split(',');
+
+         let temperaturasHeladera2 = [];
+         let temperaturasHeladera3 = [];
+         let temperaturasHeladera4 = [];
+
+         console.log(temperaturasHeladera1);
+
+
          const temperaturaContainer = document.getElementById('graficoTemp');
          const humedadContainer = document.getElementById('graficoHum');
+
+         const graficoHeladera1Container = document.getElementById('grafico1container');
+
+         const graficoHeladera1 = new Chart(graficoHeladera1Container, {
+            type: 'line',
+            data: {
+               labels: fechasHeladera1,
+               datasets: [{
+                  label: 'Temperatura Relativa',
+                  data: temperaturasHeladera1,
+                  backgroundColor: [
+                     'rgb(255, 99, 132)',
+                     'rgb(54, 162, 235)',
+                     'rgb(255, 205, 86)',
+                     'rgb(62, 205, 86)'
+                  ],
+                  fill: false,
+                  hoverOffset: 4
+               }],
+            },
+            options: {
+               plugins: {
+                  labels: {
+                     render: function (args) {
+                        return args.value + ' °C';
+                     },
+                     fontColor: '#ffffff',
+                     fontSize: 18,
+                  }
+               }
+            }
+         });
 
          const graficoTemperatura = new Chart(temperaturaContainer, {
             type: 'bar',
@@ -165,7 +221,7 @@
          function exportDashboard() {
             //instantiate jsPDF 
             var doc = new jsPDF('p','mm','a4');
-            doc.addHTML($("ul"), 15, 15, {
+            doc.addHTML($("#historicos"), 15, 15, {
                'background': '#fff',
             }, function() {
                doc.save('DOC.pdf');

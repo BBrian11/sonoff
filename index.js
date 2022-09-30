@@ -30,6 +30,35 @@ app.get("/", async (req, res) => {
   let deviceArray = [];
   let humidityArray = [];
   let devices = await getDevices();
+  let documentos = await getDevicesDb();
+  let arrayData = [];
+  let temperaturas1 = [];
+  let fechas1 = []
+
+  documentos.docs.map((doc) => {
+    arrayData.push(doc.data());
+  });
+
+  arrayData.map((item)=>{
+    console.log(item)
+    if(item.device.id == "1001498e4a"){
+      temperaturas1.push(item.temperature);
+      fechas1.push(item.currentDate.toDate().toLocaleString());
+    }
+
+    /*if(item.device.id == "10014989de"){
+       temperaturasHeladera2.push(item.temperature);
+    }
+
+    if(item.device.id == "1001498a67"){
+       temperaturasHeladera3.push(item.temperature);
+    }
+
+    if(item.device.id == "10014993eb"){
+       temperaturasHeladera4.push(item.temperature);
+    } */
+ })
+
 
   devices.forEach((device) => {
     tempArray.push(device.params.currentTemperature);
@@ -42,6 +71,9 @@ app.get("/", async (req, res) => {
     tempArray: tempArray,
     deviceArray: deviceArray,
     humidityArray: humidityArray,
+    historicDevices: arrayData,
+    temperaturas1: temperaturas1,
+    fechas1: fechas1
   });
 });
 
@@ -109,7 +141,7 @@ app.get("/excel", async (req, res) => {
   hoja.cell(1, 7).string("Temperatura mínima general").style(style);
   hoja.cell(1, 8).string(`${tempMin} °C`).style(style);
 
-  hoja.column(1).setWidth(16);
+  hoja.column(1).setWidth(19);
   hoja.column(2).setWidth(19);
   hoja.column(3).setWidth(20);
   hoja.column(5).setWidth(25);
@@ -117,35 +149,19 @@ app.get("/excel", async (req, res) => {
 
   const devices = await getDevicesDbSorted();
 
-  devices.map((doc, index) => {
-    if (index === 0) {
-      hoja
-        .cell(index + 2, 1)
-        .string(doc.currentDate.toDate().toLocaleString())
-        .style(style);
-      hoja
-        .cell(index + 2, 2)
-        .string(doc.device.name)
-        .style(style);
-      hoja
-        .cell(index + 2, 3)
-        .string(doc.temperature)
-        .style(style);
-    } else {
-      hoja
-        .cell(index + 1, 1)
-        .string(doc.currentDate.toDate().toLocaleString())
-        .style(style);
-      hoja
-        .cell(index + 1, 2)
-        .string(doc.device.name)
-        .style(style);
-      hoja
-        .cell(index + 1, 3)
-        .string(`${doc.temperature} °C`)
-        .style(style);
-    }
-    //console.log(doc.currentDate.toDate());
+  arrayData.map((doc, index) => {
+    hoja
+      .cell(index + 2, 1)
+      .string(doc.currentDate.toDate().toLocaleString())
+      .style(style);
+    hoja
+      .cell(index + 2, 2)
+      .string(doc.device.name)
+      .style(style);
+    hoja
+      .cell(index + 2, 3)
+      .string(`${doc.temperature} °C`)
+      .style(style);
   });
 
   const pathExcel = path.join(
@@ -169,9 +185,7 @@ app.get("/excel", async (req, res) => {
   });
 });
 
-app.get("pdf", async(req, res)=>{
-
-})
+app.get("pdf", async(req, res)=>{})
 
 cron.schedule("*/15 * * * *", async () => {
   await setDevicesDb();
