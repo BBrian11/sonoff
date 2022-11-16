@@ -5,6 +5,7 @@ const { sendEmail } = require("./src/config/nodemailer.js");
 const cron = require("node-cron");
 const firebase = require("firebase");
 const {firebaseConfig} = require('./src/config/firebase.js');
+const {login} = require("./src/functions/login.js");
 
 const collectionKey = "devices"; //Nombre de la colecciòn
 
@@ -26,6 +27,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", async (req, res) => {
+  const user = firebase.auth().currentUser;
+  if(user){
+    console.log("USUARIO LOGUEADO");
+  }else{
+    console.log("NO HAY USUARIO LOGUEADO");
+    res.redirect('/login');
+    return;
+  }
   let tempArray = [];
   let deviceArray = [];
   let humidityArray = [];
@@ -40,7 +49,7 @@ app.get("/", async (req, res) => {
   });
 
   arrayData.map((item)=>{
-    console.log(item)
+    //console.log(item)
     if(item.device.id == "1001498e4a"){
       temperaturas1.push(item.temperature);
       fechas1.push(item.currentDate.toDate().toLocaleString());
@@ -73,9 +82,25 @@ app.get("/", async (req, res) => {
     humidityArray: humidityArray,
     historicDevices: arrayData,
     temperaturas1: temperaturas1,
-    fechas1: fechas1
+    fechas1: fechas1,
+    user: user.email
   });
 });
+
+app.get('/login', (req, res)=>{
+  const user = firebase.auth().currentUser;
+  if(user){
+    res.redirect('/');
+  }else{
+    res.render('login', {error: false});
+  }
+})
+
+app.post('/login', async(req, res)=>{
+  const {email, password} = req.body;
+  await login(email, password, res);
+  //console.log(await login(email, password));
+})
 
 app.post("/enviar-reporte", async (req, res) => {
   return res.render("view", { device: { ...req.body } });

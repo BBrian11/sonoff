@@ -187,3 +187,15 @@ button {
 .gridster ul{
   margin: 0 auto;
 }
+
+.error-login{
+  color: #c11313;
+}
+
+.submit-form{
+  margin-left: 0px;
+}
+
+.user-email{
+  text-align: right;
+}

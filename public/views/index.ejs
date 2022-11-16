@@ -20,6 +20,7 @@
 
 <body>
    <div id="screen" class="container">
+      <p class="user-email pt-2"><%= user %></p>
       <div class="row"><center>
          <img src="img/logo.svg" alt="yoast seo" height="288" width="388"/></center>
          <% for (item of devices) { %>
@@ -27,7 +28,7 @@
             <div class="card">
                <form action="/enviar-reporte" >
                   <center>
-                  <h2  id="dispositivo"><%= item.name %></h2>
+                  <h2 id="dispositivo"><%= item.name %></h2>
                   <br> 
                   <h4>Temperatura Actual</h4>
                   <h1 id="temperatura"><%= item.params.currentTemperature %>°C
