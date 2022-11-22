@@ -18,6 +18,7 @@ const {setDevicesDb} = require('./src/functions/setDevicesDb.js');
 
 const xl = require("excel4node");
 const path = require("path");
+const { logout } = require("./src/functions/logout.js");
 
 app.set("views", "./public/views");
 app.set("view engine", "ejs");
@@ -100,6 +101,10 @@ app.post('/login', async(req, res)=>{
   const {email, password} = req.body;
   await login(email, password, res);
   //console.log(await login(email, password));
+})
+
+app.get('/logout', async(req, res)=>{
+  await logout(res);
 })
 
 app.post("/enviar-reporte", async (req, res) => {

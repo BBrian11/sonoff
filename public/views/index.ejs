@@ -16,27 +16,64 @@
 
    <link rel="stylesheet" type="text/css" href="css/jquery.gridster.css">
    <title>Home</title>
-</head>
-
+</head>  
 <body>
+   <div class="wrapper container">
+      <div class="user-topbar">
+         <p class="user-email pt-2"><%= user %></p>
+         <div class="logout-icon">
+            <a href="/logout">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                  <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+               </svg>
+            </a>
+         </div>
+      </div>
+      <div class="slider" id="slider">
+         <ul class="slides">
+            <li class="slide" id="slide1">
+               <a href="#">
+                  <p class="caption"></p>
+               </a>
+            </li>
+            <li class="slide" id="slide2">
+               <a href="#">
+                  <p class="caption"></p>
+               </a>
+                  <img src="img/logo.svg" alt="logo" height="150" width="288"/>
+            </li>
+         </ul>
+      </div>
+   </div>
+
    <div id="screen" class="container">
-      <p class="user-email pt-2"><%= user %></p>
-      <div class="row"><center>
-         <img src="img/logo.svg" alt="yoast seo" height="288" width="388"/></center>
+      <div class="row">
          <% for (item of devices) { %>
-           <div class="col">
-            <div class="card">
+         <div class="col">
+            <div class="card text-center">
                <form action="/enviar-reporte" >
-                  <center>
                   <h2 id="dispositivo"><%= item.name %></h2>
                   <br> 
                   <h4>Temperatura Actual</h4>
-                  <h1 id="temperatura"><%= item.params.currentTemperature %>°C
+                  <h1 id="temperatura">
+                     <% if(item.params.currentTemperature=='unavailable'){ %>
+                        -
+                      <% } else{ %>  
+                        <%= item.params.currentTemperature %>°C
+                     <% } %>
+                  </h1>
                   <br>
                   <h4 for="humedad">Humedad Relativa</h4>
-                  <h2 id="humedad"><%= item.params.currentHumidity %>%</h2>
+                  <h2 id="humedad">
+                     <% if(item.params.currentHumidity=='unavailable'){ %>
+                        -
+                      <% } else{ %>  
+                        <%= item.params.currentHumidity %>%
+                     <% } %>
+                  </h2>
                   <br> 
-                 
+               
                   <input type="hidden" name="dispositivo" value="<%= item.name %>">
                   <input type="hidden" name="temperatura" value="<%= item.params.currentTemperature %>°C">
                   <input type="hidden" name="humedad" value="<%= item.params.currentHumidity %>%">
@@ -74,11 +111,13 @@
          <!-- <div class="col" id="grafico2container"></div>
          <div class="col" id="grafico3container"></div>
          <div class="col" id="grafico4container"></div> -->
+
       </div>
-      <center>
+      <br />
+      <div class="text-center">
          <button type="button" class="button-20" role="button" onClick="location.href='/excel';">DESCARGAR REPORTE EN EXCEL</button>
-      </center>
-      <br><br>
+         <button type="button" class="button-20" role="button" id="export">DESCARGAR REPORTE EN PDF</button>
+      </div>
 
       <!-- HTML !-->
       <!-- HTML !-->
@@ -92,30 +131,9 @@
             }, 20000);
          });
       </script> -->
-
-      <body>
-         <div class="gridster">
-            <ul>
-               <li data-row="1" data-col="1" data-sizex="5" data-sizey="6"><img src="img/logo.svg" alt="beta" />
-                  <canvas id="graficoTemp"></canvas>
-               </li>
-               <li data-row="1" data-col="5" data-sizex="5" data-sizey="6">
-                  <canvas id="line-chart"></canvas><img src="img/logo.svg" alt="beta" />
-               </li>
-               <li data-row="7" data-col="1" data-sizex="5" data-sizey="5">
-                  <canvas id="chart3"></canvas>
-               </li>
-               <li data-row="7" data-col="6" data-sizex="5" data-sizey="5">
-                  <canvas id="chart4"></canvas>   
-               </li>
-            </ul>
-         </div>
-         <br><br>
-         <center>
-            <button type="button"  class="button-20" role="button"  id="export">DESCARGAR REPORTE EN PDF</button>
-         </center>
-         <br><br>
-      </body>
+      
+   </div>
+</body>
 
       <script>
          let arrayTemperaturas = '<%= tempArray %>'.split(',');
@@ -145,10 +163,8 @@
                   label: 'Temperatura Relativa',
                   data: temperaturasHeladera1,
                   backgroundColor: [
-                     'rgb(255, 99, 132)',
-                     'rgb(54, 162, 235)',
-                     'rgb(255, 205, 86)',
-                     'rgb(62, 205, 86)'
+                     'rgb(106, 90, 205)',
+                    
                   ],
                   fill: false,
                   hoverOffset: 4
@@ -177,7 +193,7 @@
                   data: arrayTemperaturas,
                   
                   backgroundColor: [
-                     'rgb(255, 99, 132)',
+                     'rgb(106, 90, 205)',
                      'rgb(54, 162, 235)',
                      'rgb(255, 205, 86)',
                      'rgb(62, 205, 86)'
@@ -229,58 +245,7 @@
             });
          }
 
-         function firstChart() {
-            var canvas = document.getElementById('line-chart').getContext('2d');
-            new Chart(canvas, {
-               type: 'line',
-               data: {
-                  labels:arrayDispositivos,
-                  datasets: [{
-                     label: 'TEMPERATURA RELATIVA',
-                     data:arrayTemperaturas,
-                     backgroundColor: "rgba(182, 213, 139, 0.5)"
-                  }, ]
-               }
-            });
-         }
-
-         function thirdChart() {
-            var canvas = document.getElementById("chart3").getContext('2d');
-            new Chart(canvas, {
-               type: 'bar',
-               data: {
-                  labels: arrayDispositivos,
-                  datasets: [{
-                     backgroundColor: [
-                        "#512da8", 
-                        "#90a4ae", 
-                        "#009688", 
-                        "#e74c3c"
-                        ],
-                        data: arrayTemperaturas,
-                  }]
-               }
-            });
-         }
-
-         function fourthChart() {
-            var canvas = document.getElementById("chart4").getContext('2d');
-            new Chart(canvas, {
-               type: 'doughnut',
-               data: {
-                  labels: arrayDispositivos,
-                  datasets: [{
-                     backgroundColor: [
-                        "#512da8", 
-                        "#90a4ae", 
-                        "#009688", 
-                        "#e74c3c"
-                        ],
-                        data:arrayTemperaturas,
-                  }]
-               }
-            });
-         }
+        
 
       </script>
    </div>
