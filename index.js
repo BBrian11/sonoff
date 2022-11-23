@@ -43,6 +43,9 @@ app.get("/", async (req, res) => {
   let documentos = await getDevicesDb();
   let arrayData = [];
   let temperaturas1 = [];
+  let temperaturasHeladera2 = [];
+  let temperaturasHeladera3 = [];
+  let temperaturasHeladera4 = [];
   let fechas1 = []
 
   documentos.docs.map((doc) => {
@@ -56,17 +59,18 @@ app.get("/", async (req, res) => {
       fechas1.push(item.currentDate.toDate().toLocaleString());
     }
 
-    /*if(item.device.id == "10014989de"){
+    if(item.device.id == "10014989de"){
        temperaturasHeladera2.push(item.temperature);
     }
 
+/*
     if(item.device.id == "1001498a67"){
        temperaturasHeladera3.push(item.temperature);
     }
 
     if(item.device.id == "10014993eb"){
        temperaturasHeladera4.push(item.temperature);
-    } */
+    }*/
  })
 
 
@@ -83,6 +87,9 @@ app.get("/", async (req, res) => {
     humidityArray: humidityArray,
     historicDevices: arrayData,
     temperaturas1: temperaturas1,
+    temperaturasHeladera2: temperaturasHeladera2,
+    temperaturasHeladera3: temperaturasHeladera3,
+    temperaturasHeladera4: temperaturasHeladera4,
     fechas1: fechas1,
     user: user.email
   });
@@ -122,15 +129,23 @@ app.get("/excel", async (req, res) => {
     arrayData.push(doc.data());
   });
 
-  arrayData.map((doc) => {
+  let excelData;
+
+  if(req.query.device == 'Heladera 1'){
+    excelData = arrayData.filter(item=>item.device.name=='Heladera 1');
+  }else if(req.query.device == 'Heladera 2'){
+    excelData = arrayData.filter(item=>item.device.name=='Heladera 2');
+  }else{
+    excelData = arrayData;
+  }
+
+  excelData.map((doc) => {
       arrayTemperaturas.push(doc.temperature);
   });
 
   let arrayTempFiltrado = arrayTemperaturas.filter(temp=>temp != 'unavailable');
 
   let arrayTempNumber = arrayTempFiltrado.map(Number);
-
-  console.log(arrayTempNumber); 
 
   /* tempMin = Math.min(Number(arrayTempFiltrado));
   tempMax = Math.max(Number(arrayTempFiltrado)); */
@@ -179,7 +194,7 @@ app.get("/excel", async (req, res) => {
 
   const devices = await getDevicesDbSorted();
 
-  arrayData.map((doc, index) => {
+  excelData.map((doc, index) => {
     hoja
       .cell(index + 2, 1)
       .string(doc.currentDate.toDate().toLocaleString())
@@ -214,8 +229,6 @@ app.get("/excel", async (req, res) => {
     }
   });
 });
-
-app.get("pdf", async(req, res)=>{})
 
 cron.schedule("*/15 * * * *", async () => {
   await setDevicesDb();
