@@ -343,3 +343,7 @@ button {
 .logout-icon{
   margin-left: 10px;
 }
+
+.logout-btn svg{
+  margin-bottom: 4px;
+}
