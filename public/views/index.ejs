@@ -94,13 +94,17 @@
       </div>
       <br><br>
       <br><br><h2>Gráfico Histórico </h2> 
-      <canvas class="col" id="grafico1container"></canvas>
+      <canvas class="col" id="grafico1container"></canvas>  
       <div class="mt-2 mb-4" id="historicos">
          <div class="historicos-container">
             <div class="text-center mb-4">
                <img src="img/logo.svg" height="150" width="390"/>
             </div>
             <h3>Datos históricos. Últimas 24hs.</h3>
+            <div class="export-btns pt-4 pb-4">
+               <button type="button" class="button-20" role="button" onClick="location.href='/excel';">DESCARGAR REPORTE EN EXCEL</button>
+               <button type="button" class="button-20" role="button" id="export">DESCARGAR REPORTE EN PDF</button>
+            </div>
             <table class="table table-striped table-hover">
                <thead>
                   <tr>
@@ -135,10 +139,6 @@
 
       </div>
       <br />
-      <div class="text-center">
-         <button type="button" class="button-20" role="button" onClick="location.href='/excel';">DESCARGAR REPORTE EN EXCEL</button>
-         <button type="button" class="button-20" role="button" id="export">DESCARGAR REPORTE EN PDF</button>
-      </div>
 
       <!-- HTML !-->
       <!-- HTML !-->

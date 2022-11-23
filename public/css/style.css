@@ -347,3 +347,7 @@ button {
 .logout-btn svg{
   margin-bottom: 4px;
 }
+
+.export-btns{
+  text-align: right;
+}
