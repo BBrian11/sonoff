@@ -247,7 +247,7 @@ cron.schedule("*/15 * * * *", async () => {
   await setDevicesDb();
 });
 
-const PORT = 50000;
+const PORT = 3001;
 
 app.listen(PORT, () => {
   console.log("Escuchando al puerto", PORT);
