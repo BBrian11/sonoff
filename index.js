@@ -19,6 +19,7 @@ const {setDevicesDb} = require('./src/functions/setDevicesDb.js');
 const xl = require("excel4node");
 const path = require("path");
 const { logout } = require("./src/functions/logout.js");
+const { nextTick } = require("process");
 
 app.set("views", "./public/views");
 app.set("view engine", "ejs");
@@ -27,72 +28,84 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", async (req, res) => {
+const isLogged = (req, res, next)=>{
   const user = firebase.auth().currentUser;
   if(user){
+    console.log("USUARIO LOGUEADO");
+    next();
+    return true;
+  }else{
+    res.redirect('/login');
+    return false;
+  } 
+}
+
+app.get("/", isLogged, async (req, res) => {
+  const user = firebase.auth().currentUser;
+  /* if(user){
     console.log("USUARIO LOGUEADO");
   }else{
     console.log("NO HAY USUARIO LOGUEADO");
     res.redirect('/login');
     return;
-  }
-  let tempArray = [];
-  let deviceArray = [];
-  let humidityArray = [];
-  let devices = await getDevices();
-  let documentos = await getDevicesDb();
-  let arrayData = [];
-  let temperaturas1 = [];
-  let temperaturasHeladera2 = [];
-  let temperaturasHeladera3 = [];
-  let temperaturasHeladera4 = [];
-  let fechas1 = []
-
-  documentos.docs.map((doc) => {
-    arrayData.push(doc.data());
-  });
-
-  arrayData.map((item)=>{
-    //console.log(item)
-    if(item.device.id == "1001498e4a"){
-      temperaturas1.push(item.temperature);
-      fechas1.push(item.currentDate.toDate().toLocaleString());
-    }
-
-    if(item.device.id == "10014989de"){
-       temperaturasHeladera2.push(item.temperature);
-    }
-
-/*
-    if(item.device.id == "1001498a67"){
-       temperaturasHeladera3.push(item.temperature);
-    }
-
-    if(item.device.id == "10014993eb"){
-       temperaturasHeladera4.push(item.temperature);
-    }*/
- })
-
-
-  devices.forEach((device) => {
-    tempArray.push(device.params.currentTemperature);
-    deviceArray.push(device.name);
-    humidityArray.push(device.params.currentHumidity);
-  });
-
-  return res.render("index", {
-    devices: devices,
-    tempArray: tempArray,
-    deviceArray: deviceArray,
-    humidityArray: humidityArray,
-    historicDevices: arrayData,
-    temperaturas1: temperaturas1,
-    temperaturasHeladera2: temperaturasHeladera2,
-    temperaturasHeladera3: temperaturasHeladera3,
-    temperaturasHeladera4: temperaturasHeladera4,
-    fechas1: fechas1,
-    user: user.email
-  });
+  }  */
+    let tempArray = [];
+    let deviceArray = [];
+    let humidityArray = [];
+    let devices = await getDevices();
+    let documentos = await getDevicesDb();
+    let arrayData = [];
+    let temperaturas1 = [];
+    let temperaturasHeladera2 = [];
+    let temperaturasHeladera3 = [];
+    let temperaturasHeladera4 = [];
+    let fechas1 = []
+  
+    documentos.docs.map((doc) => {
+      arrayData.push(doc.data());
+    });
+  
+    arrayData.map((item)=>{
+      //console.log(item)
+      if(item.device.id == "1001498e4a"){
+        temperaturas1.push(item.temperature);
+        fechas1.push(item.currentDate.toDate().toLocaleString());
+      }
+  
+      if(item.device.id == "10014989de"){
+         temperaturasHeladera2.push(item.temperature);
+      }
+  
+  /*
+      if(item.device.id == "1001498a67"){
+         temperaturasHeladera3.push(item.temperature);
+      }
+  
+      if(item.device.id == "10014993eb"){
+         temperaturasHeladera4.push(item.temperature);
+      }*/
+   })
+  
+  
+    devices.forEach((device) => {
+      tempArray.push(device.params.currentTemperature);
+      deviceArray.push(device.name);
+      humidityArray.push(device.params.currentHumidity);
+    });
+  
+    return res.render("index", {
+      devices: devices,
+      tempArray: tempArray,
+      deviceArray: deviceArray,
+      humidityArray: humidityArray,
+      historicDevices: arrayData,
+      temperaturas1: temperaturas1,
+      temperaturasHeladera2: temperaturasHeladera2,
+      temperaturasHeladera3: temperaturasHeladera3,
+      temperaturasHeladera4: temperaturasHeladera4,
+      fechas1: fechas1,
+      user: user.email
+    }); 
 });
 
 app.get('/login', (req, res)=>{
@@ -234,7 +247,7 @@ cron.schedule("*/15 * * * *", async () => {
   await setDevicesDb();
 });
 
-const PORT = 3000;
+const PORT = 50000;
 
 app.listen(PORT, () => {
   console.log("Escuchando al puerto", PORT);
