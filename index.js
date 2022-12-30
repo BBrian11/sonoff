@@ -248,7 +248,7 @@ app.get("/excel", async (req, res) => {
 //  await setDevicesDb();
 //});
 
-const job = new CronJob("*/1 * * * *", async()=> {
+const job = new CronJob("*/15 * * * *", async()=> {
   await setDevicesDb();
 });
 
