@@ -22,6 +22,7 @@
   "homepage": "https://github.com/ingeniot/sonoff_test#readme",
   "dependencies": {
     "bootstrap-icons": "^1.10.2",
+    "cron": "^2.1.0",
     "dotenv": "^16.0.2",
     "ejs": "^3.1.8",
     "ewelink-api": "^3.1.1",
