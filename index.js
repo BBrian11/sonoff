@@ -3,6 +3,7 @@ const { connection, getDevices } = require("./src/config/ewelink-config.js");
 const { createPDF } = require("./src/config/jspdf.js");
 const { sendEmail } = require("./src/config/nodemailer.js");
 const cron = require("node-cron");
+const schedule = require('node-schedule');
 const firebase = require("firebase");
 const {firebaseConfig} = require('./src/config/firebase.js');
 const {login} = require("./src/functions/login.js");
@@ -243,7 +244,11 @@ app.get("/excel", async (req, res) => {
   });
 });
 
-cron.schedule("*/15 * * * *", async () => {
+//cron.schedule("*/15 * * * *", async () => {
+//  await setDevicesDb();
+//});
+
+schedule.scheduleJob('*/1 * * * *', async()=>{
   await setDevicesDb();
 });
 

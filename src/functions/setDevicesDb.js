@@ -9,6 +9,7 @@ const setDevicesDb = async()=>{
     return JSON.parse(process.env.DEVICES).forEach(async (device) => {
       const { temperature, ...err } =
         await connection.getDeviceCurrentTemperature(device.id);
+        console.log(device.name);
       console.log(temperature, err);
   
       const { humidity } = await connection.getDeviceCurrentHumidity(device.id);
