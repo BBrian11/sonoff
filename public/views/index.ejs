@@ -105,29 +105,33 @@
                <button type="button" class="button-20" role="button" onClick="location.href='/excel';">DESCARGAR REPORTE EN EXCEL</button>
                <button type="button" class="button-20" role="button" id="export">DESCARGAR REPORTE EN PDF</button>
             </div>
-            <table class="table table-striped table-hover">
-               <thead>
-                  <tr>
-                     <th>Fecha y hora</th>
-                     <th>Dispositivo</th>
-                     <th>Temperatura Registrada</th>
-                  </tr>
-               </thead>
-               
-               <% for (item of historicDevices) { %>
-                  <tr>
-                     <td><%= item.currentDate.toDate().toLocaleString() %></td>
-                     <td><%= item.device.name %></td>
-                     <td>
-                        <% if(item.temperature=='unavailable'){ %>
-                           -
-                         <% } else{ %>  
-                           <%= item.temperature %>°C
-                        <% } %>
-                     </td>
-                  </tr> 
-               <% } %>
-            </table>
+
+            <div class="table-container">
+               <table class="table table-striped table-hover tabla-datos mb-6">
+                  <thead>
+                     <tr>
+                        <th>Fecha y hora</th>
+                        <th>Dispositivo</th>
+                        <th>Temperatura Registrada</th>
+                     </tr>
+                  </thead>
+                  
+                  <% for (item of historicDevices) { %>
+                     <tr>
+                        <td><%= item.currentDate.toDate().toLocaleString() %></td>
+                        <td><%= item.device.name %></td>
+                        <td>
+                           <% if(item.temperature=='unavailable'){ %>
+                              -
+                            <% } else{ %>  
+                              <%= item.temperature %>°C
+                           <% } %>
+                        </td>
+                     </tr> 
+                  <% } %>
+               </table>
+            </div>
+            
             <br>
             <canvas class="col" id="grafico1container"></canvas>
             <!-- <h2>Grafico heladera 1</h2> 
@@ -167,7 +171,7 @@
          let temperaturasHeladera = '<%= temperaturasHeladera4 %>'.split(',');
          let fechasHeladera1 = '<%= fechas1 %>'.split(',');
 
-         console.log(temperaturasHeladera1);
+         //console.log(temperaturasHeladera1);
 
 
          const temperaturaContainer = document.getElementById('graficoTemp');
@@ -275,7 +279,7 @@
          });
          
          $("#export").on("click", function() {
-            console.log("ENTRA");
+            //console.log("ENTRA");
             exportDashboard();
          });
 

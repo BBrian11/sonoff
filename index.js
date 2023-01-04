@@ -30,7 +30,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const isLogged = (req, res, next)=>{
-  const user = firebase.auth().currentUser;
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      console.log("USUARIO LOGUEADO");
+      next();
+      //return true;
+    } else {
+      res.redirect('/login');
+      //return false;
+    }
+});
+
+
+  /* const user = firebase.auth().currentUser;
   if(user){
     console.log("USUARIO LOGUEADO");
     next();
@@ -38,7 +51,7 @@ const isLogged = (req, res, next)=>{
   }else{
     res.redirect('/login');
     return false;
-  } 
+  }  */
 }
 
 app.get("/", isLogged, async (req, res) => {

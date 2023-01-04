@@ -7,6 +7,7 @@ const connection = new ewelink({
 });
 
 const getDevices = async () => {
+  console.log(await connection.getDevices());
   return await connection.getDevices();
 };
 

@@ -351,3 +351,29 @@ button {
 .export-btns{
   text-align: right;
 }
+
+/* TABLA */
+
+.table-container{
+  height: 600px;
+  overflow: scroll;
+}
+
+.table-container table thead{
+  position: sticky;
+  top: 0px;
+  background-color: #ffffff;
+}
+
+
+@media only screen and (max-width: 768px) {
+  .export-btns{
+    text-align: center;
+  }
+  .export-btns button{
+    margin-bottom: 20px;
+  }
+  .table-container table{
+    text-align: center;
+  }
+}
