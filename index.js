@@ -94,10 +94,10 @@ app.get("/", isLogged, async (req, res) => {
       if(item.device.id == "1001498a67"){
          temperaturasHeladera3.push(item.temperature);
       }
-  
+  */
       if(item.device.id == "10014993eb"){
          temperaturasHeladera4.push(item.temperature);
-      }*/
+      }
    })
   
   
